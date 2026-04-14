@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>London Monitor Pro</title>
+    
+    <link rel="apple-touch-icon" href="https://img.icons8.com/fluent/192/000000/british-pound.png">
+    <link rel="icon" href="https://img.icons8.com/fluent/192/000000/british-pound.png">
+
+    <style>
+        :root { --bg: #0b0e11; --card: #1e2329; --gold: #f0b90b; --green: #2ebd85; --red: #f6465d; --text: #e6edf3; }
+        body { background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .app { width: 100%; max-width: 380px; padding: 20px; box-sizing: border-box; }
+        
+        .box { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
+        .gold-border { border: 1px solid var(--gold); }
+        
+        h1 { color: var(--gold); font-size: 22px; margin: 0 0 5px 0; text-transform: uppercase; }
+        p.subtitle { color: #848e9c; font-size: 12px; margin-bottom: 20px; }
+        
+        input { width: 100%; background: var(--bg); border: 1px solid #474d57; color: white; padding: 14px; border-radius: 10px; margin-bottom: 15px; font-size: 18px; box-sizing: border-box; outline: none; text-align: center; }
+        input:focus { border-color: var(--gold); }
+        
+        .btn { width: 100%; background: var(--gold); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+        .btn:active { transform: scale(0.98); }
+        
+        #app-content { display: none; }
+        
+        .res-box { margin-top: 20px; padding: 15px; border-radius: 12px; background: rgba(240, 185, 11, 0.05); border: 1px solid #333; text-align: left; line-height: 1.8; }
+        .line { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 5px 0; font-family: monospace; }
+        .label { color: #848e9c; font-size: 13px; }
+        .val { font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="app">
+        <div id="login-screen" class="box gold-border">
+            <img src="https://img.icons8.com/fluent/96/000000/british-pound.png" style="width:60px; margin-bottom:10px;">
+            <h1>Area Riservata</h1>
+            <p class="subtitle">Inserisci la chiave per operare</p>
+            <input type="password" id="pass" placeholder="Password">
+            <button class="btn" onclick="checkPass()">SBLOCCA</button>
+        </div>
+
+        <div id="app-content" class="box">
+            <h1>London Monitor</h1>
+            <p class="subtitle">GBPUSD • Candela 08:00-09:00</p>
+            
+            <label style="font-size:10px; color:var(--gold); display:block; text-align:left; margin-left:5px;">CAPITALE (€)</label>
+            <input type="number" id="capitale" value="1000">
+            
+            <input type="number" id="hi" step="0.00001" inputmode="decimal" placeholder="MASSIMO (High)">
+            <input type="number" id="lo" step="0.00001" inputmode="decimal" placeholder="MINIMO (Low)">
+            
+            <button class="btn" onclick="analizza()">Analizza Setup</button>
+            
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        function checkPass() {
+            if(document.getElementById('pass').value.toLowerCase() === "london") {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app-content').style.display = 'block';
+            } else {
+                alert("Chiave errata!");
+            }
+        }
+
+        function analizza() {
+            const h = parseFloat(document.getElementById('hi').value);
+            const l = parseFloat(document.getElementById('lo').value);
+            const cap = parseFloat(document.getElementById('capitale').value);
+            const res = document.getElementById('result');
+
+            if(!h || !l) return;
+
+            const pips = ((h - l) * 10000).toFixed(1);
+            const risk = (cap * 0.01).toFixed(2);
+            const lotti = (risk / (pips * 10)).toFixed(2);
+
+            res.innerHTML = `
+                <div class="res-box">
+                    <div style="text-align:center; color:var(--gold); font-weight:bold; margin-bottom:10px;">STRATEGIA PRONTA</div>
+                    <div class="line"><span class="label">Range:</span> <span class="val">${pips} Pips</span></div>
+                    <div class="line"><span class="label">Lotti:</span> <span class="val" style="color:var(--gold)">${lotti}</span></div>
+                    <div class="line"><span class="label">BUY STOP:</span> <span class="val" style="color:var(--green)">${h.toFixed(5)}</span></div>
+                    <div class="line"><span class="label">SELL STOP:</span> <span class="val" style="color:var(--red)">${l.toFixed(5)}</span></div>
+                    <div style="font-size:11px; color:#848e9c; margin-top:10px; text-align:center;">SL incrociato • TP: +12/15 pips</div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
