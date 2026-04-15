@@ -3,42 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>London Monitor Pro</title>
+    <title>London Monitor PRO - Asian Straddle</title>
     <style>
-        :root { --bg: #0b0e11; --card: #1e2329; --gold: #f0b90b; --green: #2ebd85; --red: #f6465d; --text: #eaecef; }
+        :root { --bg: #0b0e11; --card: #1e2329; --gold: #f0b90b; --green: #2ebd85; --red: #f6465d; --text: #eaecef; --gray: #848e9c; }
         body { background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; margin: 0; display: flex; justify-content: center; padding: 20px; }
-        .app { width: 100%; max-width: 380px; }
-        .box { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
-        h1 { color: var(--gold); font-size: 22px; margin: 0 0 5px; text-transform: uppercase; }
-        .subtitle { color: #848e9c; font-size: 12px; margin-bottom: 20px; }
-        input { width: 100%; background: var(--bg); border: 1px solid #474d57; color: white; padding: 14px; border-radius: 10px; margin-bottom: 15px; box-sizing: border-box; font-size: 16px; text-align: center; }
-        .btn { width: 100%; background: var(--gold); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        .app { width: 100%; max-width: 400px; }
+        .box { background: var(--card); padding: 20px; border-radius: 20px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
+        h1 { color: var(--gold); font-size: 20px; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+        .subtitle { color: var(--gray); font-size: 11px; margin-bottom: 20px; }
+        
+        .input-group { text-align: left; margin-bottom: 15px; }
+        label { display: block; font-size: 12px; color: var(--gold); margin-bottom: 5px; margin-left: 5px; font-weight: bold; }
+        input { width: 100%; background: var(--bg); border: 1px solid #474d57; color: white; padding: 12px; border-radius: 10px; box-sizing: border-box; font-size: 16px; outline: none; }
+        input:focus { border-color: var(--gold); }
+
+        .btn { width: 100%; background: var(--gold); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.2s; }
+        .btn:active { transform: scale(0.98); }
+
         #app-content { display: none; }
-        .res-box { margin-top: 20px; padding: 15px; border-radius: 12px; background: rgba(240, 185, 11, 0.05); border: 1px solid #333; text-align: left; }
-        .line { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 8px 0; font-size: 14px; }
+        .res-box { margin-top: 20px; padding: 15px; border-radius: 15px; background: rgba(255,255,255,0.03); border: 1px solid #333; text-align: left; }
+        .line { display: flex; justify-content: space-between; border-bottom: 1px solid #2b3139; padding: 10px 0; font-size: 14px; }
         .val { font-weight: bold; color: var(--gold); }
-        .trailing-box { margin-top: 15px; padding: 10px; background: rgba(46, 189, 133, 0.1); border-radius: 10px; border-left: 3px solid var(--green); font-size: 12px; line-height: 1.5; }
-        .target-box { margin-top: 10px; padding: 10px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; font-size: 13px; }
+        
+        .status-badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: bold; margin-bottom: 10px; }
+        .status-good { background: rgba(46, 189, 133, 0.2); color: var(--green); }
+        .status-warn { background: rgba(246, 70, 93, 0.2); color: var(--red); }
+
+        .trailing-box { margin-top: 15px; padding: 12px; background: rgba(46, 189, 133, 0.1); border-radius: 10px; border-left: 4px solid var(--green); font-size: 12px; line-height: 1.6; }
+        .target-box { background: rgba(240, 185, 11, 0.1); border-radius: 10px; padding: 10px; margin-top: 10px; border: 1px dashed var(--gold); }
     </style>
 </head>
 <body>
+
 <div class="app">
     <div id="login-screen" class="box">
-        <h1>Area Riservata</h1>
-        <p class="subtitle">Inserisci la chiave "london"</p>
+        <h1>Accesso Riservato</h1>
+        <p class="subtitle">Inserisci la chiave operativa</p>
         <input type="password" id="pass" placeholder="Password">
-        <button class="btn" onclick="checkPass()">SBLOCCA</button>
+        <button class="btn" onclick="checkPass()" style="margin-top:20px">SBLOCCA SISTEMA</button>
     </div>
+
     <div id="app-content" class="box">
-        <h1>London Monitor</h1>
-        <p class="subtitle">GBPUSD • Analisi Breakout</p>
-        <input type="number" id="capitale" value="100">
-        <input type="text" id="hi" placeholder="MASSIMO (High)">
-        <input type="text" id="lo" placeholder="MINIMO (Low)">
-        <button class="btn" onclick="analizza()">Analizza Setup</button>
+        <h1>London Monitor PRO</h1>
+        <p class="subtitle">Session Straddle • GBPUSD</p>
+        
+        <div class="input-group">
+            <label>CAPITALE (€)</label>
+            <input type="number" id="capitale" value="1000">
+        </div>
+        
+        <div class="input-group">
+            <label>HIGH ASIA (00:00 - 07:00)</label>
+            <input type="text" id="ah" placeholder="Esempio: 1.35737">
+        </div>
+
+        <div class="input-group">
+            <label>LOW ASIA (00:00 - 07:00)</label>
+            <input type="text" id="al" placeholder="Esempio: 1.35568">
+        </div>
+        
+        <button class="btn" onclick="analizza()">ANALIZZA STRADDLE</button>
+        
         <div id="result"></div>
     </div>
 </div>
+
 <script>
     function checkPass() {
         if(document.getElementById('pass').value.toLowerCase() === "london") {
@@ -46,40 +75,58 @@
             document.getElementById('app-content').style.display = 'block';
         } else { alert("Chiave errata!"); }
     }
+
     function analizza() {
         let cap = parseFloat(document.getElementById('capitale').value);
-        let h = parseFloat(document.getElementById('hi').value.replace(',', '.'));
-        let l = parseFloat(document.getElementById('lo').value.replace(',', '.'));
-        if(!h || !l) return;
-        let range = Math.abs(h - l) * 10000;
-        let lot = (cap * 0.01) / (range * 10);
+        let ah = parseFloat(document.getElementById('ah').value.replace(',', '.'));
+        let al = parseFloat(document.getElementById('al').value.replace(',', '.'));
+        
+        if(!ah || !al) { alert("Inserisci i livelli dell'Asia"); return; }
+
+        let buffer = 0.0002; // 2 pips come nel Pine Script
+        let target = 0.0015; // 15 pips fissi dal backtest
+        
+        let buyStop = ah + buffer;
+        let sellStop = al - buffer;
+        let rangeAsia = (ah - al) * 10000;
+        
+        // Calcolo Lotti (Rischio 1%)
+        // Formula: Lot = (Capitale * 0.01) / (Distanza SL * 10)
+        let distSL = (buyStop - sellStop) * 10000;
+        let lot = (cap * 0.01) / (distSL * 10);
         if(lot < 0.01) lot = 0.01;
 
-        // Calcolo Target (15 pips)
-        let tpBuy = h + 0.0015;
-        let tpSell = l - 0.0015;
+        // Status Qualità
+        let statusClass = rangeAsia < 30 ? 'status-good' : 'status-warn';
+        let statusText = rangeAsia < 30 ? 'OTTIMO: Asia compressa' : 'ATTENZIONE: Asia estesa';
 
         document.getElementById('result').innerHTML = `
             <div class="res-box">
-                <div class="line"><span>Range:</span> <span class="val">${range.toFixed(1)} Pips</span></div>
-                <div class="line"><span>Lotti:</span> <span class="val">${lot.toFixed(2)}</span></div>
-                <div class="line"><span>BUY STOP:</span> <span class="val" style="color:#2ebd85">${h.toFixed(5)}</span></div>
-                <div class="line"><span>SELL STOP:</span> <span class="val" style="color:#f6465d">${l.toFixed(5)}</span></div>
+                <div class="${statusClass} status-badge">${statusText}</div>
+                <div class="line"><span>Range Asia:</span> <span class="val">${rangeAsia.toFixed(1)} Pips</span></div>
+                <div class="line"><span>Lotti Consigliati:</span> <span class="val">${lot.toFixed(2)}</span></div>
                 
+                <div style="margin-top:15px">
+                    <div class="line"><span style="color:var(--green)">BUY STOP (+2 pip buf):</span> <span class="val">${buyStop.toFixed(5)}</span></div>
+                    <div class="line"><span style="color:var(--red)">SELL STOP (-2 pip buf):</span> <span class="val">${sellStop.toFixed(5)}</span></div>
+                    <div class="line"><span>STOP LOSS (Incrociato):</span> <span class="val">Lato Opposto</span></div>
+                </div>
+
                 <div class="target-box">
-                    <b style="color:var(--gold)">TARGET FINALI (TP):</b><br>
-                    TP BUY: <span class="val">${tpBuy.toFixed(5)}</span><br>
-                    TP SELL: <span class="val">${tpSell.toFixed(5)}</span>
+                    <label>TARGET FINALI (Take Profit):</label>
+                    <div class="line"><span>TP BUY:</span> <span class="val">${(buyStop + target).toFixed(5)}</span></div>
+                    <div class="line"><span>TP SELL:</span> <span class="val">${(sellStop - target).toFixed(5)}</span></div>
                 </div>
 
                 <div class="trailing-box">
-                    <b style="color:var(--green)">GESTIONE TRAILING:</b><br>
-                    1. <b>A +7 pips:</b> SL a pareggio.<br>
-                    2. <b>A +12 pips:</b> SL a +6 pips.
+                    <b>GESTIONE DINAMICA:</b><br>
+                    • A <b>+7 pips</b>: Sposta SL a Pareggio.<br>
+                    • A <b>+12 pips</b>: Sposta SL a +6 pips.
                 </div>
             </div>`;
     }
 </script>
 </body>
 </html>
+
 
